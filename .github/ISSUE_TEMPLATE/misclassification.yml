@@ -1,0 +1,50 @@
+name: Wrong recommendation
+description: PySan kept something it should flag, or flagged something it should keep
+labels: [classification]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is the most useful kind of report. The profile data can only
+        improve through real-world environments.
+
+  - type: input
+    id: package
+    attributes:
+      label: Package name and version
+      placeholder: scikit-image 0.24.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: direction
+    attributes:
+      label: What went wrong
+      options:
+        - Flagged for removal, but I need it
+        - Kept, but nothing needs it
+    validations:
+      required: true
+
+  - type: textarea
+    id: profiles
+    attributes:
+      label: Profiles selected
+      placeholder: Data science and analysis, Testing and quality
+    validations:
+      required: true
+
+  - type: textarea
+    id: usage
+    attributes:
+      label: What you use the package for
+      description: This is what tells us which profile it belongs in.
+    validations:
+      required: true
+
+  - type: textarea
+    id: metadata
+    attributes:
+      label: Collector entry for the package, if you have it
+      description: The object for this package from your collector report.
+      render: json

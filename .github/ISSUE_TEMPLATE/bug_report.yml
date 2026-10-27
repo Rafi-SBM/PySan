@@ -1,0 +1,48 @@
+name: Bug report
+description: Something is broken or behaves unexpectedly
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Load a report from ...
+        2. Select the ... profile
+        3. ...
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and operating system
+      placeholder: Firefox 142 on Fedora 42
+    validations:
+      required: true
+
+  - type: input
+    id: python
+    attributes:
+      label: Python version the report came from
+      placeholder: 3.12.1
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Browser console output, if any
+      render: text

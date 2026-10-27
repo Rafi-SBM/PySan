@@ -1,16 +1,40 @@
 {
-  "name": "pysan-react",
+  "name": "pysan",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "homepage": "https://rafi-luffy.github.io/PySan",  
+  "description": "Analyze a Python environment, find packages nothing depends on, and generate safe uninstall commands. Runs entirely in the browser.",
+  "license": "MIT",
+  "homepage": "https://rafi-sbm.github.io/PySan/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rafi-SBM/PySan.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Rafi-SBM/PySan/issues"
+  },
+  "keywords": [
+    "python",
+    "pip",
+    "dependencies",
+    "disk-usage",
+    "virtualenv",
+    "developer-tools"
+  ],
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "preview": "PYSAN_BASE=/ vite preview",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "predeploy": "npm run build",                   
-    "deploy": "gh-pages -d dist"                    
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "verify": "npm run lint && npm run build && npm run test"
   },
   "dependencies": {
     "react": "^19.1.0",
@@ -18,16 +42,23 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^22.20.5",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
+    "@vitest/coverage-v8": "^3.1.4",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
-    "gh-pages": "^6.3.0",                        
     "globals": "^16.0.0",
+    "jsdom": "^26.0.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vitest": "^3.1.4"
   }
 }

@@ -1,33 +1,81 @@
-// src/components/CodeBlock.tsx
-import { useState } from 'react';
+import { Fragment, useCallback, useState } from 'react';
+import { Icon } from './Icon';
+import { TOKEN_CLASS, tokenizePython } from '../lib/highlight';
+import { downloadText } from '../lib/export';
 
 interface CodeBlockProps {
-  id: string;
-  codeText: string;
-  codeHtml: string;
-  copyBtnTitle: string;
+  code: string;
+  /** Filename or short description shown in the title bar. */
+  label?: string;
+  /** Highlight the contents as Python. Shell snippets stay unhighlighted. */
+  language?: 'python' | 'shell' | 'text';
+  /** Offer a download button writing the contents to this filename. */
+  downloadAs?: string;
+  compact?: boolean;
 }
 
-export function CodeBlock({ id, codeText, codeHtml, copyBtnTitle }: CodeBlockProps) {
-  const [copyText, setCopyText] = useState('Copy');
+export function CodeBlock({
+  code,
+  label,
+  language = 'text',
+  downloadAs,
+  compact = false,
+}: CodeBlockProps) {
+  const [copied, setCopied] = useState(false);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(codeText).then(() => {
-      setCopyText('Copied!');
-      setTimeout(() => setCopyText('Copy'), 2000);
-    });
-  };
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      // Clipboard access can be blocked; the text remains selectable.
+    }
+  }, [code]);
+
+  const body =
+    language === 'python' ? (
+      tokenizePython(code).map((token, index) => {
+        const className = TOKEN_CLASS[token.kind];
+        return className ? (
+          <span key={index} className={className}>
+            {token.text}
+          </span>
+        ) : (
+          <Fragment key={index}>{token.text}</Fragment>
+        );
+      })
+    ) : (
+      code
+    );
 
   return (
-    <div className="code-container">
-      <button onClick={handleCopy} className="copy-button" title={copyBtnTitle}>
-        <span>{copyText}</span> <i className="fa-solid fa-copy"></i>
-      </button>
-      <div 
-        className="code-block" 
-        id={id}
-        dangerouslySetInnerHTML={{ __html: codeHtml }} 
-      />
+    <div className={compact ? 'code code--compact' : 'code'}>
+      <div className="code__bar">
+        <span className="code__label">
+          <Icon name={language === 'python' ? 'terminal' : 'terminal'} size={13} />
+          {label ?? (language === 'python' ? 'python' : 'shell')}
+        </span>
+        <span className="code__actions">
+          {downloadAs && (
+            <button
+              type="button"
+              className="btn"
+              onClick={() => downloadText(downloadAs, code)}
+            >
+              <Icon name="download" size={13} />
+              Download
+            </button>
+          )}
+          <button type="button" className="btn" onClick={handleCopy}>
+            <Icon name={copied ? 'check' : 'copy'} size={13} />
+            {copied ? 'Copied' : 'Copy'}
+          </button>
+        </span>
+      </div>
+      <pre>
+        <code>{body}</code>
+      </pre>
     </div>
   );
 }
