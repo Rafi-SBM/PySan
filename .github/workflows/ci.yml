@@ -19,9 +19,9 @@ jobs:
     name: Lint, typecheck, test, build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -41,7 +41,7 @@ jobs:
         run: npm run build
 
       - name: Upload build output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist
@@ -53,16 +53,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ['3.8', '3.12', '3.13']
-        exclude:
-          # Python 3.8 is not available on the macOS arm64 runners.
-          - os: macos-latest
-            python-version: '3.8'
+        # Explicit combinations, because the oldest supported interpreter is
+        # not offered on every runner image: Python 3.8 is absent from the
+        # Ubuntu 26.04 image and from the macOS arm64 runners.
+        include:
+          - { os: ubuntu-24.04, python-version: '3.8' }
+          - { os: windows-latest, python-version: '3.8' }
+          - { os: ubuntu-latest, python-version: '3.12' }
+          - { os: ubuntu-latest, python-version: '3.13' }
+          - { os: macos-latest, python-version: '3.12' }
+          - { os: macos-latest, python-version: '3.13' }
+          - { os: windows-latest, python-version: '3.13' }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -73,7 +78,6 @@ jobs:
         shell: python
         run: |
           import json
-          import sys
 
           with open('report.json', encoding='utf-8') as handle:
               report = json.load(handle)
