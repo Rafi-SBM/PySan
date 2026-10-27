@@ -59,10 +59,13 @@ describe('PySan end to end', () => {
 
     await user.click(screen.getByRole('button', { name: /get the cleanup commands/i }));
 
+    // The command appears both as its own step and inside the full script.
     expect(
-      await screen.findByText(/python -m pip uninstall --yes -r pysan-remove\.txt/),
-    ).toBeInTheDocument();
-    expect(screen.getByText(/python -m pip freeze > requirements\.backup\.txt/)).toBeInTheDocument();
+      await screen.findAllByText(/python -m pip uninstall --yes -r pysan-remove\.txt/),
+    ).not.toHaveLength(0);
+    expect(
+      screen.getAllByText(/python -m pip freeze > requirements\.backup\.txt/),
+    ).not.toHaveLength(0);
   });
 
   it('reports a parse failure without losing the pasted text', async () => {

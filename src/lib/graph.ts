@@ -105,21 +105,3 @@ export function transitiveClosure(
 
   return reached;
 }
-
-/**
- * Packages that would be left with no remaining dependent if `removing` were
- * uninstalled and that are not in `removing` themselves. Useful for telling
- * the user what else becomes safe to drop.
- */
-export function newlyOrphaned(
-  graph: DependencyGraph,
-  removing: ReadonlySet<string>,
-): string[] {
-  const orphans: string[] = [];
-  for (const [id, parents] of graph.requiredBy) {
-    if (removing.has(id)) continue;
-    if (parents.length === 0) continue;
-    if (parents.every((parent) => removing.has(parent))) orphans.push(id);
-  }
-  return orphans.sort();
-}

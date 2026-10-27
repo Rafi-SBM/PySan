@@ -24,7 +24,6 @@ export const PROTECTED_PACKAGES: readonly string[] = [
   'wheel',
   'packaging',
   'virtualenv',
-  'venv',
   'pipenv',
   'poetry',
   'poetry-core',

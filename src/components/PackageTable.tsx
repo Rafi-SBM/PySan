@@ -80,26 +80,34 @@ export function PackageTable({ decisions, overrides, onOverride }: PackageTableP
   const visible = showAll ? rows : rows.slice(0, SOFT_ROW_LIMIT);
   const hidden = rows.length - visible.length;
 
-  const sortButton = (key: SortKey, label: string) => (
-    <button
-      type="button"
-      className="table__sort"
-      aria-sort={
-        sortKey === key ? (ascending ? 'ascending' : 'descending') : undefined
-      }
-      onClick={() => {
-        if (sortKey === key) setAscending((value) => !value);
-        else {
-          setSortKey(key);
-          setAscending(key === 'name');
-        }
-      }}
+  const sortHeader = (key: SortKey, label: string, className?: string) => (
+    <th
+      scope="col"
+      className={className}
+      aria-sort={sortKey === key ? (ascending ? 'ascending' : 'descending') : undefined}
     >
-      {label}
-      {sortKey === key && (
-        <Icon name={ascending ? 'chevron-down' : 'chevron-down'} size={12} />
-      )}
-    </button>
+      <button
+        type="button"
+        className="table__sort"
+        data-active={sortKey === key}
+        onClick={() => {
+          if (sortKey === key) setAscending((value) => !value);
+          else {
+            setSortKey(key);
+            setAscending(key === 'name');
+          }
+        }}
+      >
+        {label}
+        {sortKey === key && (
+          <Icon
+            name="chevron-down"
+            size={12}
+            className={ascending ? 'table__arrow table__arrow--up' : 'table__arrow'}
+          />
+        )}
+      </button>
+    </th>
   );
 
   return (
@@ -147,13 +155,9 @@ export function PackageTable({ decisions, overrides, onOverride }: PackageTableP
         <table className="table">
           <thead>
             <tr>
-              <th scope="col">{sortButton('name', 'Package')}</th>
-              <th scope="col" className="col-num">
-                {sortButton('size', 'Size')}
-              </th>
-              <th scope="col" className="col-tight">
-                {sortButton('reason', 'Decision')}
-              </th>
+              {sortHeader('name', 'Package')}
+              {sortHeader('size', 'Size', 'col-num')}
+              {sortHeader('reason', 'Decision', 'col-tight')}
               <th scope="col">Why</th>
               <th scope="col" className="col-tight">
                 <span className="visually-hidden">Actions</span>

@@ -8,6 +8,7 @@ import {
   REMOVE_FILE_NAME,
   SHELLS,
   buildCommandPlan,
+  renderScript,
   type PackageManager,
   type Shell,
 } from '../lib/commands';
@@ -183,6 +184,27 @@ export function CleanupStep({
             <CodeBlock code={plan.restore} label="shell" compact />
           </li>
         </ol>
+
+        <details className="detail">
+          <summary>
+            <Icon name="chevron-right" size={14} />
+            The whole procedure as one script
+          </summary>
+          <div className="detail__body">
+            <p>
+              Save this next to <code>{REMOVE_FILE_NAME}</code> and read it before running
+              it. The restore command is left commented out deliberately.
+            </p>
+            <div style={{ marginTop: 'var(--space-3)' }}>
+              <CodeBlock
+                code={renderScript(plan, shell)}
+                label={shell === 'cmd' ? 'pysan-cleanup.bat' : 'pysan-cleanup.sh'}
+                downloadAs={shell === 'cmd' ? 'pysan-cleanup.bat' : 'pysan-cleanup.sh'}
+                compact
+              />
+            </div>
+          </div>
+        </details>
       </div>
 
       <div className="card">

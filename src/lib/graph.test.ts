@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildDependencyGraph, newlyOrphaned, transitiveClosure } from './graph';
+import { buildDependencyGraph, transitiveClosure } from './graph';
 import { parseEnvironmentData } from './parse';
 import type { Package } from '../types';
 
@@ -85,17 +85,6 @@ describe('transitiveClosure', () => {
   it('ignores roots that are not installed', () => {
     const graph = buildDependencyGraph(env({ app: [] }));
     expect([...transitiveClosure(graph, ['ghost'])]).toEqual([]);
-  });
-});
-
-describe('newlyOrphaned', () => {
-  it('lists packages left with no remaining dependent', () => {
-    const graph = buildDependencyGraph(
-      env({ app: ['shared'], other: ['shared'], shared: [] }),
-    );
-
-    expect(newlyOrphaned(graph, new Set(['app']))).toEqual([]);
-    expect(newlyOrphaned(graph, new Set(['app', 'other']))).toEqual(['shared']);
   });
 });
 

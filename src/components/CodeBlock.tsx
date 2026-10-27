@@ -53,7 +53,7 @@ export function CodeBlock({
     <div className={compact ? 'code code--compact' : 'code'}>
       <div className="code__bar">
         <span className="code__label">
-          <Icon name={language === 'python' ? 'terminal' : 'terminal'} size={13} />
+          <Icon name={language === 'python' ? 'package' : 'terminal'} size={13} />
           {label ?? (language === 'python' ? 'python' : 'shell')}
         </span>
         <span className="code__actions">

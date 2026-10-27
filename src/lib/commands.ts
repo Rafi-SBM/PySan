@@ -115,12 +115,17 @@ function buildFileCommand(manager: PackageManager, shell: Shell): string {
       return `conda remove --yes --file ${REMOVE_FILE_NAME}`;
     case 'pipenv':
     case 'poetry': {
+      // Neither manager reads a requirements file, so the list is expanded by
+      // the shell. cmd has no command substitution, hence the loop.
+      if (shell === 'cmd') {
+        return `for /f "usebackq delims=" %i in ("${REMOVE_FILE_NAME}") do ${uninstallPrefix(
+          manager,
+        )} %i`;
+      }
       const expansion =
         shell === 'powershell'
           ? `(Get-Content ${REMOVE_FILE_NAME})`
-          : shell === 'cmd'
-            ? `%PACKAGES%`
-            : `$(cat ${REMOVE_FILE_NAME})`;
+          : `$(cat ${REMOVE_FILE_NAME})`;
       return `${uninstallPrefix(manager)} ${expansion}`;
     }
     case 'pip':

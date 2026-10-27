@@ -1050,8 +1050,16 @@ samp {
   color: var(--text);
 }
 
-.table__sort[aria-sort] {
+.table__sort[data-active='true'] {
   color: var(--accent);
+}
+
+.table__arrow {
+  transition: transform var(--transition);
+}
+
+.table__arrow--up {
+  transform: rotate(180deg);
 }
 
 .col-num {

@@ -91,3 +91,22 @@ describe('renderScript', () => {
     expect(renderScript(plan, 'cmd')).toContain('REM 1. Record');
   });
 });
+
+describe('shell-specific file expansion', () => {
+  it('loops in cmd, which has no command substitution', () => {
+    const plan = buildCommandPlan(pkgs('x'), 'poetry', 'cmd');
+
+    expect(plan.fromFile).toBe(
+      'for /f "usebackq delims=" %i in ("pysan-remove.txt") do poetry remove %i',
+    );
+    expect(plan.fromFile).not.toContain('%PACKAGES%');
+  });
+
+  it('uses the -r flag where the manager supports it, whatever the shell', () => {
+    for (const shell of ['posix', 'powershell', 'cmd'] as const) {
+      expect(buildCommandPlan(pkgs('x'), 'pip', shell).fromFile).toBe(
+        'python -m pip uninstall --yes -r pysan-remove.txt',
+      );
+    }
+  });
+});
